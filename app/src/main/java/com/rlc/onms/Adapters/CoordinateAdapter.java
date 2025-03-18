@@ -37,9 +37,7 @@ public class CoordinateAdapter extends ArrayAdapter<Coordinate> {
         final View finalConvertView = convertView;
         final int finalPosition = position;
 
-        radioButton.setOnClickListener(v -> {
-            listView.performItemClick(finalConvertView, finalPosition, getItemId(finalPosition));
-        });
+        radioButton.setOnClickListener(v -> listView.performItemClick(finalConvertView, finalPosition, getItemId(finalPosition)));
 
         radioButton.setChecked(listView.getCheckedItemPosition() == position);
 

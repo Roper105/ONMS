@@ -16,8 +16,6 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.Intent;
-import android.net.Uri;
 import android.widget.Button;
 import android.view.View;
 import android.widget.Toast;
@@ -44,9 +42,6 @@ public class TicketFragment extends Fragment implements OnMapReadyCallback {
     private ArrayList<Coordinate> coordinateList;
     private CoordinateAdapter adapter;
     private EditText topluMetin;
-    private Button pasteButton;
-
-    private Button buttonClear;
 
     private GoogleMap mMap;
     private MapView mapView;
@@ -57,8 +52,8 @@ public class TicketFragment extends Fragment implements OnMapReadyCallback {
 
         // UI units
         topluMetin = view.findViewById(R.id.editTextClipboard);
-        pasteButton = view.findViewById(R.id.buttonPaste);
-        buttonClear = view.findViewById(R.id.buttonClear);
+        Button pasteButton = view.findViewById(R.id.buttonPaste);
+        Button buttonClear = view.findViewById(R.id.buttonClear);
         listViewCoordinates = view.findViewById(R.id.listViewCoordinates);
         MaxHeightListView listViewCoordinates = view.findViewById(R.id.listViewCoordinates);
         listViewCoordinates.setMaxHeight((int) TypedValue.applyDimension(
@@ -110,9 +105,7 @@ public class TicketFragment extends Fragment implements OnMapReadyCallback {
 
         pasteButton.setOnClickListener(v -> clipboardMetniAl());
 
-        buttonClear.setOnClickListener(v -> {
-                Toast.makeText(requireContext(), "Temizlemek için basılı tutun", Toast.LENGTH_SHORT).show();
-                });
+        buttonClear.setOnClickListener(v -> Toast.makeText(requireContext(), "Temizlemek için basılı tutun", Toast.LENGTH_SHORT).show());
 
         buttonClear.setOnLongClickListener(v -> {
             topluMetin.setText("");
@@ -134,7 +127,7 @@ public class TicketFragment extends Fragment implements OnMapReadyCallback {
 
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
     }
@@ -186,23 +179,6 @@ public class TicketFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public void yolTarifiBaslat() {   // Maps SDK güncellemesi ile ihtiyaç kalmadı. Test sonrası kaldırılacak
-        int selectedPosition = listViewCoordinates.getCheckedItemPosition();
-        int itemCount = listViewCoordinates.getCount();
-        if (selectedPosition != ListView.INVALID_POSITION && itemCount!=0 ) {
-            Coordinate selectedCoordinate = coordinateList.get(selectedPosition);
-            String latitude = selectedCoordinate.getLatitude();
-            String longitude = selectedCoordinate.getLongitude();
-
-            String url = "https://www.google.com/maps/dir/?api=1&destination=" + latitude + "," + longitude;
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            intent.setPackage("com.google.android.apps.maps");
-            startActivity(intent);
-        } else {
-            Toast.makeText(requireContext(), "Lütfen bir koordinat seçin", Toast.LENGTH_SHORT).show();
-
-        }
-    }
     @Override
     public void onResume() {
         super.onResume();

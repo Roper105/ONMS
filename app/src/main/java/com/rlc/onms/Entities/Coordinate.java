@@ -1,8 +1,10 @@
 package com.rlc.onms.Entities;
 
+import androidx.annotation.NonNull;
+
 public class Coordinate {
-    private String latitude;
-    private String longitude;
+    private final String latitude;
+    private final String longitude;
 
     public Coordinate(String latitude, String longitude) {
         this.latitude = latitude;
@@ -17,6 +19,7 @@ public class Coordinate {
         return longitude;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return latitude + ", " + longitude;

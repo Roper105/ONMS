@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rlc.onms.R;
@@ -13,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KmzAdapter extends RecyclerView.Adapter<KmzAdapter.ViewHolder> {
-    private List<String> kmzList;
-    private List<String> filteredList;
-    private OnItemClickListener listener;
+    private final List<String> kmzList;
+    private final List<String> filteredList;
+    private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(String fileName);
@@ -27,6 +29,7 @@ public class KmzAdapter extends RecyclerView.Adapter<KmzAdapter.ViewHolder> {
         this.listener = listener;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_kmz, parent, false);
@@ -59,16 +62,11 @@ public class KmzAdapter extends RecyclerView.Adapter<KmzAdapter.ViewHolder> {
             }
         }
         Log.d("FILTER", "Filtered List boyut: " + filteredList.size());
-        Log.d("FILTER", "Filtered List içerik: " + filteredList.toString());
-        notifyDataSetChanged();
+        Log.d("FILTER", "Filtered List içerik: " + filteredList);
+
+        notifyDataSetChanged();  // ahmet bak düşme ha !!!
     }
 
-    public void updateList(List<String> newKmzList) {
-        kmzList.clear();
-        kmzList.addAll(newKmzList);
-        notifyDataSetChanged();
-
-    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;

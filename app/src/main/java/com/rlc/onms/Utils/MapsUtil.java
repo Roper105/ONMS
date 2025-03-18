@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class MapsUtil {
@@ -60,7 +61,7 @@ public class MapsUtil {
         java.util.regex.Matcher matcher = pattern.matcher(kmlData);
 
         if (matcher.find()) {
-            String[] coords = matcher.group(1).trim().split("\\s+");
+            String[] coords = Objects.requireNonNull(matcher.group(1)).trim().split("\\s+");
             for (String coord : coords) {
                 String[] latLng = coord.split(",");
                 double lon = Double.parseDouble(latLng[0]);

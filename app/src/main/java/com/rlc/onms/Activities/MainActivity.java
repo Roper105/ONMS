@@ -22,9 +22,6 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout; // DrawerLayout
     private NavigationView navigationView;
-    private Toolbar toolbar;
-
-    private String version;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         // DrawerLayout, NavigationView ve Toolbar
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Versiyon Bilgisi
@@ -43,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         MenuItem versionItem = navigationView.getMenu().findItem(R.id.nav_version);
         versionItem.setTitle("Versiyon: " + versionName);
-        version = getString(R.string.app_name) + "_" + versionName + ".apk";
+        //String version = getString(R.string.app_name) + "_" + versionName + ".apk";
 
         // Menü simgesini toolbar'da gösterin
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

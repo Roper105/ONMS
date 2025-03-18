@@ -63,8 +63,6 @@ public class SaraFragment extends Fragment implements OnMapReadyCallback, Naviga
     private List<LatLng> pathPoints = new ArrayList<>();
     private GoogleMap mMap;
     private KmzAdapter adapter;
-    private List<String> kmzList;
-
 
 
     private final ActivityResultLauncher<Intent> fileChooserLauncher =
@@ -116,7 +114,7 @@ public class SaraFragment extends Fragment implements OnMapReadyCallback, Naviga
 
 //        startAdapter();
 
-        kmzList = FileUtil.getInternalKmzFiles(requireContext());
+        List<String> kmzList = FileUtil.getInternalKmzFiles(requireContext());
 
         adapter = new KmzAdapter(kmzList, fileName -> {
             searchView.setQuery(fileName, false);
@@ -181,17 +179,11 @@ public class SaraFragment extends Fragment implements OnMapReadyCallback, Naviga
         // Buton dinleyicileri
         view.findViewById(R.id.btnSelectKmz).setOnClickListener(v -> openFileChooser());
 
-        view.findViewById(R.id.btnFindLocation).setOnClickListener(v -> {
-            MapsUtil.findLocation(requireContext(), mMap, pathPoints, etDistance);
-        });
+        view.findViewById(R.id.btnFindLocation).setOnClickListener(v -> MapsUtil.findLocation(requireContext(), mMap, pathPoints, etDistance));
 
-        view.findViewById(R.id.btnUpdate).setOnClickListener(v -> {
-            updateFilesFromDrive();
-        });
+        view.findViewById(R.id.btnUpdate).setOnClickListener(v -> updateFilesFromDrive());
 
-        view.findViewById(R.id.btnCleanMap).setOnClickListener(v ->{
-            Toast.makeText(requireContext(),"Temizlemek için basılı tutun", Toast.LENGTH_SHORT).show();
-        });
+        view.findViewById(R.id.btnCleanMap).setOnClickListener(v -> Toast.makeText(requireContext(),"Temizlemek için basılı tutun", Toast.LENGTH_SHORT).show());
 
         view.findViewById(R.id.btnCleanMap).setOnLongClickListener(v ->{
             mMap.clear();
@@ -253,7 +245,7 @@ public class SaraFragment extends Fragment implements OnMapReadyCallback, Naviga
     }
 
     @Override
-    public void onMapReady (GoogleMap googleMap){
+    public void onMapReady (@NonNull GoogleMap googleMap){
         mMap = googleMap;
         LatLng bandirma = new LatLng(40.346587, 27.978899);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bandirma, 10));

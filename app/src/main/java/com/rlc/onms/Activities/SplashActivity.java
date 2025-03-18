@@ -45,13 +45,13 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash); // Splash ekranı için layout tanımlayın
+        setContentView(R.layout.activity_splash);
 
         version = BuildConfig.VERSION_NAME; // Mevcut uygulama sürümünü al
-        checkDriveFileInBackground(FOLDER_ID); // Güncellemeleri kontrol et
+        checkDriveFileInBackground(); // Güncellemeleri kontrol et
     }
 
-    private void checkDriveFileInBackground(String folderId) {
+    private void checkDriveFileInBackground() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(getMainLooper());
 
@@ -60,7 +60,7 @@ public class SplashActivity extends AppCompatActivity {
         executor.execute(() -> {
             try {
                 // Drive'daki dosya adını al
-                String fileName = getFileNameFromDrive(folderId);
+                String fileName = getFileNameFromDrive();
 
                 handler.post(() -> {
                     if (fileName != null) {
@@ -87,7 +87,7 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
-    private String getFileNameFromDrive(String folderId) throws IOException {
+    private String getFileNameFromDrive() throws IOException {
         // Hizmet hesabı JSON anahtar dosyasını yükleyin
         InputStream jsonKeyStream = getResources().openRawResource(R.raw.service_account_key);
         GoogleCredentials credentials = GoogleCredentials.fromStream(jsonKeyStream)
@@ -99,7 +99,7 @@ public class SplashActivity extends AppCompatActivity {
 
         // Klasördeki dosyayı sorgula
         FileList result = service.files().list()
-                .setQ("'" + folderId + "' in parents") // Belirtilen klasörü hedefler
+                .setQ("'" + SplashActivity.FOLDER_ID + "' in parents") // Belirtilen klasörü hedefler
                 .setFields("files(name)") // Sadece dosya adını alır
                 .execute();
 
@@ -124,21 +124,11 @@ public class SplashActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-//    private void installApk(java.io.File apkFile) {
-//        Intent intent = new Intent(Intent.ACTION_VIEW);
-//        intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        startActivity(intent);
-//    }
-
     private void showUpdateDialog(String fileName) {
         new android.app.AlertDialog.Builder(this)
                 .setTitle("Uygulama Güncellemesi")
                 .setMessage("Yeni bir güncelleme mevcut. İndirmek ister misiniz?")
-                .setPositiveButton("Evet", (dialog, which) -> {
-                    downloadAndUpdate(fileName);
-                })
+                .setPositiveButton("Evet", (dialog, which) -> downloadAndUpdate(fileName))
                 .setNegativeButton("Hayır", (dialog, which) -> moveToMainActivity())
                 .setCancelable(false)
                 .show();
@@ -180,12 +170,10 @@ public class SplashActivity extends AppCompatActivity {
                         .setApplicationName("ONMS")
                         .build();
 
-                String fileId = getFileIdFromDrive(FOLDER_ID, fileName);
+                String fileId = getFileIdFromDrive(fileName);
                 File apkFile = new File(getExternalFilesDir(null), "update.apk");
 
                 OutputStream outputStream = new FileOutputStream(apkFile);
-//                service.files().get(fileName).executeMediaAndDownloadTo(outputStream);
-//                outputStream.close();
                 service.files().get(fileId).executeMediaAndDownloadTo(outputStream); // FileId kullanılıyor
                 outputStream.close();
 
@@ -214,7 +202,7 @@ public class SplashActivity extends AppCompatActivity {
             }
         }
     }
-    private String getFileIdFromDrive(String folderId, String fileName) throws IOException {
+    private String getFileIdFromDrive(String fileName) throws IOException {
 
         InputStream jsonKeyStream = getResources().openRawResource(R.raw.service_account_key);
         GoogleCredentials credentials = GoogleCredentials.fromStream(jsonKeyStream)
@@ -224,7 +212,7 @@ public class SplashActivity extends AppCompatActivity {
                 .build();
 
         FileList result = service.files().list()
-                .setQ("'" + folderId + "' in parents and name='" + fileName + "'")
+                .setQ("'" + SplashActivity.FOLDER_ID + "' in parents and name='" + fileName + "'")
                 .setFields("files(id, name)") // Sadece dosya kimliği ve adı alınır
                 .execute();
 

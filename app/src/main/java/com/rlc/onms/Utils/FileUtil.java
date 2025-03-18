@@ -6,7 +6,6 @@ import android.net.Uri;
 
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.FileList;
-import com.rlc.onms.R;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class FileUtil {
 
     // Drive dosya indirme. KMZ listesi
     public static void updateFilesFromDrive(Context context, Drive googleDriveService, String parentFolderId) throws IOException {
-        InputStream jsonKeyStream = context.getResources().openRawResource(R.raw.service_account_key);
+        //InputStream jsonKeyStream = context.getResources().openRawResource(R.raw.service_account_key);
         FileList result = googleDriveService.files().list()
                 .setSpaces("drive")
                 .setQ("'" + parentFolderId + "' in parents")
